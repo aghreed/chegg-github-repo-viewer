@@ -5,23 +5,33 @@ import api from './api';
 import moment from 'moment';
 
 const AppContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   text-align: center;
 `;
 
 const ListsContainer = styled.div`
   display: flex;
+  flex-direction: row;
   justify-content: space-around;
   width: 100vw;
+
+  @media(max-width: 700px) {
+    flex-direction: column;
+  }
 `;
 
 const RepoList = styled.div`
   overflow-y: scroll;
-  max-height: 60vh;
+  max-height: 80vh;
   background: #f2f2f2;
   flex: ${props => props.selectedRepo ? 0.3 : 1};
-  transition: all 400ms ease-in;
+  transition: flex 400ms ease-in;
+
+  @media(max-width: 700px) {
+    flex: 0.8;
+    max-height: 50vh;
+  }
 `;
 
 const RepoListItem = styled.div`
@@ -37,9 +47,15 @@ const RepoListItem = styled.div`
 const IssueList = styled.div`
   background: #f2f2f2;
   overflow-y: scroll;
-  max-height: 60vh;
+  max-height: 80vh;
   flex: ${props => props.selectedRepo ? 0.6 : 0};
-  transition: all 350ms ease-in;
+  opacity: ${props => props.selectedRepo ? 1 : 0};
+  transition: flex 350ms ease-in;
+
+  @media(max-width: 700px) {
+    flex: ${props => props.selectedRepo ? 0.8 : 0};
+    margin: 3em 0;
+  }
 `;
 
 const IssueListItem = styled.div`
@@ -51,6 +67,7 @@ const IssueListItem = styled.div`
 const IssueListItemImage = styled.div`
   width: 40px;
   height: 40px;
+  border-radius: 40px;
   background: #f2f2f2;
   background-repeat: no-repeat;
   background-size: contain;
@@ -79,6 +96,7 @@ const LoadingMessage = styled.div`
 
 const NoResultsMessage = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
@@ -124,7 +142,8 @@ class App extends Component {
       repos,
       loadingRepos,
       selectedRepoId,
-      repoIssues
+      repoIssues,
+      loadingIssues
     } = this.state;
 
     return (
@@ -152,36 +171,46 @@ class App extends Component {
             </RepoList>
             <IssueList selectedRepo={selectedRepoId !== null}>
               {
-                repoIssues.length > 0
+                loadingIssues
                 ?
-                <div>
-                  <IssueListItem style={{ borderBottom: `1px solid #000`, padding: `1em 0`}}>
-                    <IssueListItemInfo>Assignee</IssueListItemInfo>
-                    <IssueListItemInfo>Title</IssueListItemInfo>
-                    <IssueListItemInfo>Created</IssueListItemInfo>
-                    <IssueListItemInfo>Last Updated</IssueListItemInfo>
-                  </IssueListItem>
-                  {
-                    repoIssues.map(issue => (
-                      <IssueListItem key={issue.id}>
-                        <IssueListItemInfo style={{ display: `flex`, justifyContent: `center` }}>
-                          <IssueListItemImage avatar={issue.assignee && issue.assignee.avatar_url} />
-                        </IssueListItemInfo>
-                        <IssueListItemInfo title={issue.title}>
-                          {issue.title}
-                        </IssueListItemInfo>
-                        <IssueListItemInfo>
-                          {moment(issue.created_at).calendar()}
-                        </IssueListItemInfo>
-                        <IssueListItemInfo>
-                          {moment(issue.updated_at).calendar()}
-                        </IssueListItemInfo>
-                      </IssueListItem>
-                    ))
-                  }
-                </div>
+                <LoadingMessage>Fetching associated issues...</LoadingMessage>
                 :
-                <NoResultsMessage>No issues exist for the selected repo</NoResultsMessage>
+                <div style={{ height: `100%` }}>
+                {
+                  repoIssues.length > 0 ?
+                  <div>
+                    <IssueListItem style={{ borderBottom: `1px solid #000`, padding: `1em 0`}}>
+                      <IssueListItemInfo>Assignee</IssueListItemInfo>
+                      <IssueListItemInfo>Title</IssueListItemInfo>
+                      <IssueListItemInfo>Created</IssueListItemInfo>
+                      <IssueListItemInfo>Last Updated</IssueListItemInfo>
+                    </IssueListItem>
+                    {
+                      repoIssues.map(issue => (
+                        <IssueListItem key={issue.id}>
+                          <IssueListItemInfo style={{ display: `flex`, justifyContent: `center` }}>
+                            <IssueListItemImage avatar={issue.assignee && issue.assignee.avatar_url} />
+                          </IssueListItemInfo>
+                          <IssueListItemInfo title={issue.title}>
+                            {issue.title}
+                          </IssueListItemInfo>
+                          <IssueListItemInfo>
+                            {moment(issue.created_at).calendar()}
+                          </IssueListItemInfo>
+                          <IssueListItemInfo>
+                            {moment(issue.updated_at).calendar()}
+                          </IssueListItemInfo>
+                        </IssueListItem>
+                      ))
+                    }
+                  </div>
+                  :
+                  <NoResultsMessage>
+                    <h2>Wow!</h2>
+                    There are zero issues for this repo
+                  </NoResultsMessage>
+                }
+              </div>
               }
             </IssueList>
           </ListsContainer>
