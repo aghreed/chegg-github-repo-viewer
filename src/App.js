@@ -4,6 +4,10 @@ import styled from '@emotion/styled';
 import api from './api';
 import moment from 'moment';
 
+const greyBackground = '#F2F2F2';
+const darkGrey = '#3C4146';
+const cheggOrange = '#EB7100';
+
 const AppContainer = styled.div`
   width: 100vw;
   height: 100vh;
@@ -13,7 +17,7 @@ const AppContainer = styled.div`
 const ListsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: ${props => props.selectedRepo ? 'space-around' : 'center'};
   width: 100vw;
 
   @media(max-width: 700px) {
@@ -25,7 +29,7 @@ const RepoList = styled.div`
   overflow-y: scroll;
   max-height: 80vh;
   background: #f2f2f2;
-  flex: ${props => props.selectedRepo ? 0.3 : 1};
+  flex: ${props => props.selectedRepo ? 0.3 : 0.8};
   transition: flex 400ms ease-in;
 
   @media(max-width: 700px) {
@@ -36,16 +40,16 @@ const RepoList = styled.div`
 
 const RepoListItem = styled.div`
   padding: 0.75em;
-  background: ${props => props.selected ? '#ec38ff' : '#f2f2f2'};
+  background: ${props => props.selected ? cheggOrange : greyBackground};
   cursor: pointer;
 
   &:hover {
-    background: #ec38ff;
+    background: ${cheggOrange};
   }
 `;
 
 const IssueList = styled.div`
-  background: #f2f2f2;
+  background: ${greyBackground};
   overflow-y: scroll;
   max-height: 80vh;
   flex: ${props => props.selectedRepo ? 0.6 : 0};
@@ -62,13 +66,17 @@ const IssueListItem = styled.div`
   display: flex;
   align-items: center;
   padding: 0.5em 0;
+
+  &:hover {
+    background: ${cheggOrange};
+  }
 `;
 
 const IssueListItemImage = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 40px;
-  background: #f2f2f2;
+  background: ${darkGrey};
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
@@ -146,6 +154,8 @@ class App extends Component {
       loadingIssues
     } = this.state;
 
+    const selectedRepo = selectedRepoId !== null;
+
     return (
       <AppContainer>
         {
@@ -155,8 +165,8 @@ class App extends Component {
           loadingRepos ?
           <LoadingMessage><h1>Loading Repos...</h1></LoadingMessage>
           :
-          <ListsContainer>
-            <RepoList selectedRepo={selectedRepoId !== null}>
+          <ListsContainer selectedRepo={selectedRepo}>
+            <RepoList selectedRepo={selectedRepo}>
               {
                 repos.length > 0 && repos.map(repo => (
                   <RepoListItem
@@ -169,7 +179,7 @@ class App extends Component {
                 ))
               }
             </RepoList>
-            <IssueList selectedRepo={selectedRepoId !== null}>
+            <IssueList selectedRepo={selectedRepo}>
               {
                 loadingIssues
                 ?
@@ -188,7 +198,7 @@ class App extends Component {
                     {
                       repoIssues.map(issue => (
                         <IssueListItem key={issue.id}>
-                          <IssueListItemInfo style={{ display: `flex`, justifyContent: `center` }}>
+                          <IssueListItemInfo style={{ display: `flex`, justifyContent: `center` }} title={issue.assignee && issue.assignee.username}>
                             <IssueListItemImage avatar={issue.assignee && issue.assignee.avatar_url} />
                           </IssueListItemInfo>
                           <IssueListItemInfo title={issue.title}>
