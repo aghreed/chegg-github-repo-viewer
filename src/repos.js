@@ -13,11 +13,11 @@ const RepoContainer = styled.div`
 
 const RepoList = styled.div`
   overflow-y: scroll;
-  max-height: 70vh;
+  height: 70vh;
   background: ${greyBackground};
 
   @media(max-width: 700px) {
-    max-height: 50vh;
+    height: 50vh;
   }
 `;
 

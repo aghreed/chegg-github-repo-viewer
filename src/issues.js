@@ -17,7 +17,7 @@ const IssueContainer = styled.div`
 
 const IssueList = styled.div`
   overflow-y: scroll;
-  max-height: 80vh;
+  height: 70vh;
   background: ${greyBackground};
 `;
 
@@ -83,7 +83,7 @@ const NoResultsMessage = styled.div`
 
 const IssuesContainer = ({
     repoSelected,
-    loadingIssues,
+    issuesLoading,
     issues
 }) => (
     <IssueContainer repoSelected={repoSelected}>
@@ -92,7 +92,7 @@ const IssuesContainer = ({
         </IssueListHeader>
         <IssueList repoSelected={repoSelected}>
         {
-            loadingIssues
+            issuesLoading
             ?
             <LoadingMessage>Fetching associated issues...</LoadingMessage>
             :

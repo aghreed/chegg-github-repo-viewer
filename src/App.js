@@ -59,6 +59,7 @@ const LoadingMessage = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+  width: 100%;
 
   h1 {
     font-size: 6em;
@@ -79,21 +80,21 @@ class App extends Component {
     const {
       repos,
       selectedRepoName,
-      loadingRepos,
+      reposLoading,
       repoSelected,
       issues,
-      loadingIssues,
-      tokenProvided,
+      issuesLoading,
+      repoFetchMade,
       token
     } = this.props;
 
     return (
       <AppContainer>
         {
-          tokenProvided ?
+          repoFetchMade ?
           <div>
             {
-              loadingRepos ?
+              reposLoading ?
               <LoadingMessage><h1>Loading Repos...</h1></LoadingMessage>
               :
               <ListsContainer repoSelected={repoSelected}>
@@ -105,7 +106,7 @@ class App extends Component {
                 />
                 <IssuesContainer
                   repoSelected={repoSelected}
-                  loadingIssues={loadingIssues}
+                  issuesLoading={issuesLoading}
                   issues={issues}
                 />
               </ListsContainer>
@@ -124,10 +125,10 @@ class App extends Component {
 }
 
 const mapState = (state) => {
+  console.log("map state: ", state);
   return {
     ...state,
-    repoSelected: state.selectedRepoName !== null,
-    tokenProvided: state.token !== null && state.repos.length > 0
+    repoSelected: state.selectedRepoName !== null
   };
 };
 

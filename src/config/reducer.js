@@ -2,6 +2,7 @@ export const initialState = {
     repos: [],
     issues: [],
     selectedRepoName: null,
+    repoFetchMade: false,
     reposLoading: false,
     issuesLoading: false,
     token: null
@@ -22,6 +23,7 @@ export default function reducer(state = initialState, { type, payload }) {
         case "FETCH_REPOS":
             return {
                 ...state,
+                repoFetchMade: true,
                 reposLoading: true
             };
         case "FETCH_REPOS_SUCCESS":
