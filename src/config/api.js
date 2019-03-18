@@ -2,7 +2,6 @@
 // const token = '311e6d5bc24e8083825328eecd836b380b94943e';
 const api = {
     getRepos: ({ token }) => {
-        console.log("token", token);
         return fetch(`https://api.github.com/user/repos`, {
             headers: {
                 "Authorization": `token ${token}`
@@ -11,8 +10,6 @@ const api = {
         .then(response => response.json());
     },
     getRepoIssues: ({ url, token }) => {
-        console.log("url: ", url);
-        console.log("token: ", token);
         return fetch(url, {
             headers: {
                 "Authorization": `token ${token}`
