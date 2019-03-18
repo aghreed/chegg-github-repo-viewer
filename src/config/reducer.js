@@ -1,0 +1,47 @@
+export const initialState = {
+    repos: [],
+    issues: [],
+    selectedRepoName: null,
+    reposLoading: false,
+    issuesLoading: false,
+    token: null
+};
+
+export default function reducer(state = initialState, { type, payload }) {
+    switch(type) {
+        case "UPDATE_TOKEN":
+            return {
+                ...state,
+                token: payload
+            };
+        case "SELECT_REPO":
+            return {
+                ...state,
+                selectedRepoName: payload.repoName
+            };
+        case "FETCH_REPOS":
+            return {
+                ...state,
+                reposLoading: true
+            };
+        case "FETCH_REPOS_SUCCESS":
+            return {
+                ...state,
+                reposLoading: false,
+                repos: payload
+            };
+        case "FETCH_ISSUES":
+            return {
+                ...state,
+                issuesLoading: true
+            };
+        case "FETCH_ISSUES_SUCCESS":
+            return {
+                ...state,
+                issuesLoading: false,
+                issues: payload
+            };
+        default:
+            return state;
+    }
+}
