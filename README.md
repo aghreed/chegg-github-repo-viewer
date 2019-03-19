@@ -1,3 +1,17 @@
+# Chegg Coding Challenge
+
+In order to run this code:
+1. Pull down the repository
+2. Navigate to the root directory in a terminal
+3. Run `npm install`
+4. After depdencies are installed, run `npm start`
+5. Navigate to http://localhost:3000 in your browser
+6. Enter your desired Github API key, and start browsing repos and issues
+7. All state is persisted client side, so if you want to start the process over, simply click the "Start Over" button
+
+
+# ORIGINAL READ-ME BELOW
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
