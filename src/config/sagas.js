@@ -1,6 +1,4 @@
 import { takeEvery, call, put } from "redux-saga/effects";
-import { initialState } from "./reducer";
-import { saveState } from "./storage";
 import api from "./api";
 
 function* fetchRepos({ payload }) {
