@@ -90,23 +90,28 @@ class App extends Component {
   selectRepo = (repoName, repoIssuesUrl) => () =>
     this.props.selectRepo(repoName, repoIssuesUrl, this.props.token);
 
-  moveIssue = (direction, index) => () => {
+  moveIssue = (direction, issueIndex) => () => {
     const { issues } = this.props;
-    const issue = issues[index];
     let newIssues = [];
 
-    if (direction === "up" && index !== 0) {
-      const issueToMoveDown = issues[index - 1];
-      const firstHalf = index - 1 === 0 ? [] : issues.slice(0, index)
-      const secondHalf = issues.slice(index + 1, issues.length);
-
-      newIssues = [...firstHalf, issue, issueToMoveDown, ...secondHalf];
-    } else if (direction === "down" && index !== this.props.issues.length - 1) {
-      const issueToMoveUp = issues[index + 1];
-      const firstHalf = issues.slice(0, index);
-      const secondHalf = issues.slice(index + 2, issues.length);
-
-      newIssues = [...firstHalf, issueToMoveUp, issue, ...secondHalf];
+    if (direction === "up" && issueIndex !== 0) {
+      newIssues = issues.map((issue, index) => {
+        if (index === issueIndex - 1) {
+          return issues[issueIndex];
+        } else if (index === issueIndex) {
+          return issues[issueIndex - 1];
+        }
+        return issue;
+      });
+    } else if (direction === "down" && issueIndex !== issues.length - 1) {
+      newIssues = issues.map((issue, index) => {
+        if (index === issueIndex) {
+          return issues[issueIndex + 1];
+        } else if (index === issueIndex + 1) {
+          return issues[issueIndex];
+        }
+        return issue;
+      });
     }
 
     if (newIssues.length !== 0 && newIssues.length === issues.length) {
