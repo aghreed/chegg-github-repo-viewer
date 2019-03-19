@@ -81,10 +81,35 @@ const NoResultsMessage = styled.div`
   height: 100%;
 `;
 
+const UpArrow = styled.div`
+  opacity: ${props => props.firstItem ? 0.4 : 1};
+  pointer-events: ${props => props.firstItem ? `none` : `auto`};
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #000;
+  margin-bottom: 0.4em;
+  cursor: ${props => props.firstItem ? `not-allowed` : `pointer`};
+`;
+
+const DownArrow = styled.div`
+  opacity: ${props => props.lastItem ? 0.4 : 1};
+  pointer-events: ${props => props.firstItem ? `none` : `auto`};
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #000;
+  margin-top: 0.4em;
+  cursor: ${props => props.lastItem ? `not-allowed` : `pointer`};
+`;
+
 const IssuesContainer = ({
     repoSelected,
     issuesLoading,
-    issues
+    issues,
+    moveIssue
 }) => (
     <IssueContainer repoSelected={repoSelected}>
         <IssueListHeader repoSelected={repoSelected}>
@@ -107,8 +132,12 @@ const IssuesContainer = ({
                     <IssueListItemInfo>Last Updated</IssueListItemInfo>
                 </IssueListItemHeader>
                 {
-                issues.map(issue => (
+                issues.map((issue, index) => (
                     <IssueListItem key={issue.id}>
+                    <div style={{ position: `relative`, left: `1.5em` }}>
+                      <UpArrow firstItem={index === 0} onClick={moveIssue("up", index)} />
+                      <DownArrow lastItem={index === issues.length - 1} onClick={moveIssue("down", index)} />
+                    </div>
                     <IssueListItemInfo style={{ display: `flex`, justifyContent: `center` }} title={issue.assignee && issue.assignee.username}>
                         <IssueListItemImage avatar={issue.assignee && issue.assignee.avatar_url} />
                     </IssueListItemInfo>
@@ -116,7 +145,7 @@ const IssuesContainer = ({
                         {issue.title}
                     </IssueListItemInfo>
                     <IssueListItemInfo>
-                        {moment(issue.created_at).calendar()}
+                        {moment(issue.created_at).format("DD/MM/YYYY")}
                     </IssueListItemInfo>
                     <IssueListItemInfo>
                         {moment(issue.updated_at).calendar()}

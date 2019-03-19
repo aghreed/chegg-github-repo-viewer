@@ -43,6 +43,15 @@ export default function reducer(state = initialState, { type, payload }) {
                 issuesLoading: false,
                 issues: payload
             };
+        case "SORT_ISSUES":
+            return {
+                ...state,
+                issues: payload.issues
+            };
+        case "START_OVER":
+            return {
+                ...initialState
+            };
         default:
             return state;
     }

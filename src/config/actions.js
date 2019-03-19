@@ -27,11 +27,22 @@ export const fetchIssuesSuccess = (data) => ({
     payload: data
 });
 
+export const sortIssues = (issues, repoName) => ({
+    type: "SORT_ISSUES",
+    payload: { issues, repoName }
+});
+
+export const startOver = () => ({
+    type: "START_OVER"
+});
+
 export default {
     saveToken,
     selectRepo,
     fetchRepos,
     fetchReposSuccess,
     fetchIssues,
-    fetchIssuesSuccess
+    fetchIssuesSuccess,
+    sortIssues,
+    startOver
 };

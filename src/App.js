@@ -66,6 +66,20 @@ const LoadingMessage = styled.div`
   }
 `;
 
+const StartOverButton = styled.button`
+  align-self: center;
+  padding: 1.5em;
+  margin: 0.25em;
+  background: ${cheggOrange};
+  font-size: 1.25em;
+  cursor: pointer;
+  opacity: 0.9;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 class App extends Component {
   saveToken = (e) =>
     this.props.saveToken(e.target.value);
@@ -75,6 +89,30 @@ class App extends Component {
 
   selectRepo = (repoName, repoIssuesUrl) => () =>
     this.props.selectRepo(repoName, repoIssuesUrl, this.props.token);
+
+  moveIssue = (direction, index) => () => {
+    const { issues } = this.props;
+    const issue = issues[index];
+    let newIssues = [];
+
+    if (direction === "up" && index !== 0) {
+      const issueToMoveDown = issues[index - 1];
+      const firstHalf = index - 1 === 0 ? [] : issues.slice(0, index)
+      const secondHalf = issues.slice(index + 1, issues.length);
+
+      newIssues = [...firstHalf, issue, issueToMoveDown, ...secondHalf];
+    } else if (direction === "down" && index !== this.props.issues.length - 1) {
+      const issueToMoveUp = issues[index + 1];
+      const firstHalf = issues.slice(0, index);
+      const secondHalf = issues.slice(index + 2, issues.length);
+
+      newIssues = [...firstHalf, issueToMoveUp, issue, ...secondHalf];
+    }
+
+    if (newIssues.length !== 0 && newIssues.length === issues.length) {
+      this.props.sortIssues(newIssues);
+    }
+  };
     
   render() {
     const {
@@ -85,7 +123,8 @@ class App extends Component {
       issues,
       issuesLoading,
       repoFetchMade,
-      token
+      token,
+      startOver
     } = this.props;
 
     return (
@@ -98,6 +137,7 @@ class App extends Component {
               <LoadingMessage><h1>Loading Repos...</h1></LoadingMessage>
               :
               <ListsContainer repoSelected={repoSelected}>
+                <StartOverButton onClick={startOver}>Start Over</StartOverButton>
                 <ReposContainer
                   repoSelected={repoSelected}
                   repos={repos}
@@ -108,6 +148,7 @@ class App extends Component {
                   repoSelected={repoSelected}
                   issuesLoading={issuesLoading}
                   issues={issues}
+                  moveIssue={this.moveIssue}
                 />
               </ListsContainer>
             }
@@ -125,7 +166,6 @@ class App extends Component {
 }
 
 const mapState = (state) => {
-  console.log("map state: ", state);
   return {
     ...state,
     repoSelected: state.selectedRepoName !== null

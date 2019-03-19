@@ -1,4 +1,6 @@
 import { takeEvery, call, put } from "redux-saga/effects";
+import { initialState } from "./reducer";
+import { saveState } from "./storage";
 import api from "./api";
 
 function* fetchRepos({ payload }) {
@@ -16,7 +18,6 @@ function* selectRepo({ payload }) {
 };
 
 function* fetchIssues({ payload }) {
-    console.log("payload: ", payload);
     try {
         const data = yield call(api.getRepoIssues, payload);
         yield put({ type: "FETCH_ISSUES_SUCCESS", payload: data });
@@ -29,4 +30,4 @@ export default function* root() {
     yield(takeEvery("FETCH_REPOS", fetchRepos));
     yield(takeEvery("SELECT_REPO", selectRepo));
     yield(takeEvery("FETCH_ISSUES", fetchIssues));
-}
+};
