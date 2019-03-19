@@ -1,5 +1,3 @@
-
-// const token = '311e6d5bc24e8083825328eecd836b380b94943e';
 const api = {
     getRepos: ({ token }) => {
         return fetch(`https://api.github.com/user/repos`, {
